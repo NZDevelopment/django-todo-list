@@ -22,11 +22,14 @@ from django.db import transaction
 
 
 # Create your views here.
-#def tasklist(request):
-#    return HttpResponse('To Do List')
+
+
 class Tasklist(ListView):
     model = Todo
     context_object_name = 'tasks'
+
+    def get_queryset(self):
+        return Todo.objects.filter(user=self.request.user.id).order_by('-created')
 
 class Taskdetail(DetailView):
     model = Todo
@@ -34,61 +37,38 @@ class Taskdetail(DetailView):
     template_name = 'todo/todo.html'
 
 
-# class TaskCreate(CreateView):
-#     model = Todo
-#     fields = '__all__'
-#     success_url = reverse_lazy('tasks')
+class CreateTask(View):
+    """ add task"""
+    def get(self, request):
+        """What happens for a GET request"""
+        return render(
+            request, "todo/create_task.html", {"todo_form": TodoForm()})
 
 
-#@login_required
-#@method_decorator(login_required, name='dispatch')
-#class TaskCreate(View):
-#class TaskCreate(LoginRequiredMixin, CreateView):
-    #""" add recipe"""
- #   @login_required
-#    def get(self, request):
-#        """What happens for a GET request"""
-#        return render(
-#            request, "todo/todo_form.html", {"todo_form": TodoForm()})
-#    @login_required
-#    def post(self, request):
-#        """What happens for a POST request"""
-#        todo_form = TodoForm(request.POST, request.FILES)
+    def post(self, request):
+        """What happens for a POST request"""
+        todo_form = TodoForm(request.POST, request.FILES)
 
-#        if todo_form.is_valid():
-#            todo = todo_form.save(commit=False)        
-#            todo.author = request.user
-            #todo.slug = slugify('-'.join([todo.title, str(todo.author)]), allow_unicode=False)
-            #form.instance.user = self.request.user #Nz remove
-#            todo.author = request.user #Nz remove after testing
-#            todo_form.instance.description = todo.description
-#            todo.save()
-#            messages.success(request, " Task added successfully!") #Nz
- #           return redirect('tasks')
-#        else:
-#            messages.error(self.request, 'Please complete all required fields')
-#            todo_form = TodoForm()
+        if todo_form.is_valid():
+            form = todo_form.save(commit=False)
+            form.user = request.user
+            form.save()
+            print('save')
+            return redirect('tasks')
+        else:
+            print('error')
+            messages.error(self.request, 'Please complete all required fields')
+            todo_form = TodoForm()
 
-#        return render(
-#            request,
-#            "todo/todo_form.html",
-#            {"todo_form": todo_form},
-#        )
+        return render(
+            request,
+            "todo/create_task.html",
+            {
+                "todo_form": todo_form
 
-class TaskCreate(LoginRequiredMixin, CreateView):
-    model = Todo
-    fields = ['title', 'description', 'complete']
-    success_url = reverse_lazy('tasks')
+            },
+        )
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super(TaskCreate, self).form_valid(form)
-
-
-
-
-
-# Nz
 class TaskUpdate(LoginRequiredMixin, UpdateView):
     model = Todo #Task
     fields = ['title', 'description', 'complete']
