@@ -3,26 +3,82 @@
 {% block content %}
 
 
-<h1>My To Do List</h1>
-<a href="{% url 'task-create' % } "> Add Tasks</a>>
+<div class="container text-center">
+    <div class="row">
+        <div class="col">
+            <h1>My To Do List</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <a href="{% url 'task-create' % } "> <button class="btn btn-warning mb-2" >Add Task</button></a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        {% for todo in tasks %}
+      <div class="col-sm-6 col-md-7 col-lg-3 col-xl-3 mb-3">
+        <a href="{% url 'tasks' todo.id %}" class="text-decoration-none text-reset">
+        <div class="card card-recently-added">
+                <div class="card-body text-bg-light">
+                    <h5 class="card-title rec-card-title"></h5>
+                <p class="card-text text-center">{{todo.title}}</p>
+                <p class="card-text">{{todo.id}}</p>
+                <p class="card-text">{{todo.description}}</p>
+                <div class="card-text text-muted">{{ todo.created}}</p>
+                 </div>
+                <hr>
+            </div>
+        </div>
+        </a>
+      </div>    
+      {% empty %}
+      <h1>No items in list</h1> 
+      {% endfor %}
+    </div>
+  </div>
 
 
-<table>
-    <tr>
-        <th>Items</th>
-        <th></th>
-    </tr>
+
+
+<!-- Hidden form. Form submits new item positions -->
+<form style="display: none;" id="reorderForm" method="post" action="{% url 'task-reorder' %}">
+    {% csrf_token %}
+    <input type="hidden" id="positionInput" name="position">
+</form>
+
+
+<!-- (b) -->
+<div id="tasklist" class="task-items-wrapper">
     {% for todo in tasks %}
-    <tr>
-        <td>{{todo.title}}</td>
+    <div class="task-wrapper" data-position="{{todo.pk}}">
+        <div class="task-title">
+            {% if task.complete %}
+            <div class="task-complete-icon"></div>
+            <i><s><a href="{% url 'task-update' todo.id %}">{{task}}</a></s></i> {% else %}
+            <div class="task-incomplete-icon"></div>
+            <a href="{% url 'task-update' todo.id %}">{{task}}</a> {% endif %}
+        </div>
 
-        <td>{{todo.id}}</td>
-        <td><a href="{% url 'tasks' todo.id %}">View</a></td>
-    </tr>    
+        <!-- 
+        delete task
+    -->
+
     {% empty %}
-      <h1>No items in list</h1>
-
+    <div style="text-align: center; padding-bottom: 10px; line-height: 1em;">
+        <h3>No new tasks are created.</h3>
+        <h3>Create a <a style="text-decoration: none; color: #e53935;" href="{% url 'task-create' %}">New task</a> ! </h3>
+    </div>
     {% endfor %}
-</table>
+</div>
+<!-- (e) -->
+
+
+
+
+
 
 {%endblock%}
