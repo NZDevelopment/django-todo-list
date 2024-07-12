@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load crispy_forms_tags%}
+
+<div class="container text-center">
+    <div class="row">
+        <div class="col">
+            <h1>Create A Task</h1>
+        </div>
+    </div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-10 mt-3 offset-1 g-0">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ todo_form | crispy }}
+                <button class="btn btn-secondary right mb-2" type="submit" value="Save">Add Task</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+{%endblock%}
