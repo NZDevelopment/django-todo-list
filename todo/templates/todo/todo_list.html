@@ -1,8 +1,20 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 
+<!--
+<section class="position-relative centered-text container-fluid">
+    
+    <h1 class="position-absolute end-0 d-none d-md-block moto">Welcome!</h1>
+    <img src="{% static '/images/todo-list.jpg'%}" class="z-index-1 hero" height="auto" width="100%" class="z-index-1 hero" 
+        alt="Welcome image">
+</section>
+-->
 {% if user.is_authenticated %}
+
+
+
+
 
 
 <div class="container text-center">
@@ -38,14 +50,65 @@
         <div class="text-center mb-3">
             <!-- EDIT AND DELETE BUTTONS -->
             <span>
-            <a href="#"><button class="btn btn-success ">Edit</button></a></span>
+                <!-- 
+            <a href="#"><button class="btn btn-success ">Edit</button></a>
+            -->
+            <a href="{% url 'task-update' todo.id %}"><button class="btn btn-success">Edit</button></a>
+            <!--{% if task.complete %}
+            <div class="task-complete-icon"></div> -->
+            <!-- 
+            <i><s><a href="{% url 'task-update' todo.id %}">{{task}}</a></s></i>
+            -->
+            <!-- {% else %}
+            <div class="task-incomplete-icon"></div>
+            <a href="{% url 'task-update' todo.id %}">{{task}}</a> 
+            {% endif %} -->
+            <a href="{% url 'task-update' todo.id %}">{{task}}</a>
+        </span>
             <span>
-                <a href="#"><button class="btn btn-danger ">Delete</button></a></span>
-            </span>
+                <!-- 
+                <a href="#"><button class="btn btn-danger ">Delete</button></a></span> -->
+                
+                <!--
+                <a href="{% url 'task-delete' todo.id %}"><button class="btn btn-danger ">Delete</button></a></span>
+            -->
+            
+            <!-- put back
+            <button type="button" class="btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal{{ todo.id }}">Delete</button>
+            -->
+            
+            <!-- <button type="button" class="btn-sm btn-danger"  data-target="#deleteModal">Delete</button> -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal{{todo.id}}">
+                Delete
+              </button>   
+        </span>
             <!-- END OF BUTTONS -->
-         </div>
+         </div>    
         </div>
-        
+
+        <div class="modal fade" id="deleteModal{{todo.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4>Are you sure you want to delete the task {{ todo.title}}?</h4>
+                    <p>This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <a href="{% url 'task-delete' todo.id %}" class="btn btn-danger">Delete</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          Static ba
+
+    <!-- Begin of test area-->
+
+    <!-- End of test area -->    
       </div>    
       {% empty %}
       <h1>No items in list</h1> 
