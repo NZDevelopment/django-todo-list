@@ -93,17 +93,6 @@ def delete_task(request, todo_id):
         'tasks'))
 
 
-
-# class DeleteView(LoginRequiredMixin, DeleteView):
-#     model = Todo
-#     context_object_name = 'task'
-#     success_url = reverse_lazy('tasks')
-#     def get_queryset(self):
-#         owner = self.request.user
-#         return self.model.objects.filter(user=owner)
-
-
-
 class TaskReorder(View): #Reorder
     def post(self, request):
         form = PositionForm(request.POST)
