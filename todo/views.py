@@ -76,15 +76,6 @@ class TaskUpdate(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('tasks')
 
 
-#class TaskUpdate(UpdateView): #Nz attempt. Network error
-#    model = Todo
-#    form_class = TodoForm
-#    template_name = 'todo/create_task.html'  # Use the same template as CreateTask
-
-#    def get_success_url(self):
-#        return reverse_lazy('tasks')
-
-
 def delete_task(request, todo_id):
     """Deletes task"""
     todo = get_object_or_404(Todo, id=todo_id)
